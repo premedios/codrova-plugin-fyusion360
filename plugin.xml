@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-plugin-fyusion360" version="0.1">
+    <name>Fyusion360</name>
+    <description>Fyusion360 Cordova Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,fyusion360</keywords>
+    <js-module src="www/fyusion360plugin.js" name="Fyusion360">
+        <clobbers target="cordova.plugins.fyusion360"/>
+        <clobbers target="plugins.fyusion360"/>
+    </js-module>
+
+    <preference name="FYUSION360_API_KEY"/>
+    <preference name="FYUSION360_API_SECRET"/>
+
+    <platform name="ios">
+        <preference name="CAMERA_USAGE_DESCRIPTION"/>
+
+        <hook type="before_plugin_install" src="hooks/download_fyusion360_library_ios.js"/>
+        
+        <config-file target="config.xml" parent="/*">
+            <feature name="Fyusion360">
+                <param name="ios-package" value="Fyusion360Plugin"/>
+            </feature>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="FYUSION360_API_KEY">
+            <string>$FYUSION360_API_KEY</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="FYUSION360_API_SECRET">
+            <string>$FYUSION360_API_SECRET</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+            <string>$CAMERA_USAGE_DESCRIPTION</string>
+        </config-file>
+
+        <source-file src="src/ios/Fyusion360Plugin.swift"/>
+        <header-file src="src/ios/AppDelegate+Fyusion360Plugin.h"/>
+        <source-file src="src/ios/AppDelegate+Fyusion360Plugin.m"/>
+
+        <framework src="src/ios/3.3.0/FyuseSessionTagging.framework" custom="true" embed="true"/>
+
+        <!-- <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/> -->
+        
+        <!-- <podspec>
+            <config>
+                <source url="https://github.com/CocoaPods/Specs.git"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="FyuseSessionTagging" options="podspec: 'https://developers.fyusion.com/FyuseSessionTagging/JVORXiVbgaosXiGkwjs_ZtMdTMEDhyQbPjWTcbzP/latest.podspec'"/>
+            </pods>
+        </podspec> -->
+    </platform>
+</plugin>
