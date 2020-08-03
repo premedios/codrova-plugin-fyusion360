@@ -29,6 +29,7 @@ import FyuseSessionTagging
         fyuseInfo = NSMutableDictionary()
         fyuseIDs = [String]()
         
+        FYSessionDetailPhoto.object(for: .coreOdometer)?.displayName = "bla bla"
         sessionViewController = FYSessionViewController()
         
         if let sessionViewController = sessionViewController {
@@ -44,33 +45,68 @@ import FyuseSessionTagging
     @objc(showFyuse:)
     func showFyuse(command: CDVInvokedUrlCommand) {
         if let arguments = command.arguments, arguments.count > 0 {
-            FYSessionManager.requestMainFyuseForSession(withIdentifier: (arguments[0] as! String)) { fyuseObj in
-                var pluginResult: CDVPluginResult
-                
-                if let fyuse = fyuseObj {
-                    self.fyuseViewController = UIViewController()
-                    self.fyuseViewController.modalPresentationStyle = .currentContext
-                    self.fyuseViewController.view.backgroundColor = .white
-                    let fyuseView = FYFyuseView()
-                    fyuseView.translatesAutoresizingMaskIntoConstraints = false
-                    fyuseView.fyuse = fyuse
-                    fyuseView.contentMode = .scaleAspectFit
-                    fyuseView.motionEnabled = true
-                    fyuseView.priority = .visible
-                    fyuseView.preferredResolution = .normal
-                    self.fyuseViewController.view.addSubview(fyuseView)
-                    fyuseView.topAnchor.constraint(equalTo: self.fyuseViewController.view.topAnchor, constant: 16).isActive = true
-                    fyuseView.centerXAnchor.constraint(equalTo: self.fyuseViewController.view.centerXAnchor).isActive = true
-                    fyuseView.leadingAnchor.constraint(equalTo: self.fyuseViewController.view.leadingAnchor, constant: 16).isActive = true
-                    fyuseView.trailingAnchor.constraint(equalTo: self.fyuseViewController.view.trailingAnchor, constant: -16).isActive = true
-                    fyuseView.bottomAnchor.constraint(equalTo: self.fyuseViewController.view.bottomAnchor, constant: 16).isActive = true
-                    self.viewController.present(self.fyuseViewController, animated: true, completion: nil)
-                    pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "Fyusion360 session retrieved successfully")
-                } else {
-                    pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Unable to retrieve Fyusion360 session. Please contact support")
+            self.commandDelegate.run {
+                FYSessionManager.requestMainFyuseForSession(withIdentifier: (arguments[0] as! String)) { fyuseObj in
+                    var pluginResult: CDVPluginResult
+                    
+                    if let fyuse = fyuseObj {
+                        self.fyuseViewController = UIViewController()
+                        self.fyuseViewController.modalPresentationStyle = .currentContext
+                        self.fyuseViewController.view.backgroundColor = .white
+                        let fyuseView = FYFyuseView()
+                        fyuseView.translatesAutoresizingMaskIntoConstraints = false
+                        fyuseView.fyuse = fyuse
+                        fyuseView.contentMode = .scaleAspectFit
+                        fyuseView.motionEnabled = true
+                        fyuseView.priority = .visible
+                        fyuseView.preferredResolution = .normal
+                        self.fyuseViewController.view.addSubview(fyuseView)
+                        fyuseView.topAnchor.constraint(equalTo: self.fyuseViewController.view.topAnchor, constant: 16).isActive = true
+                        fyuseView.centerXAnchor.constraint(equalTo: self.fyuseViewController.view.centerXAnchor).isActive = true
+                        fyuseView.leadingAnchor.constraint(equalTo: self.fyuseViewController.view.leadingAnchor, constant: 16).isActive = true
+                        fyuseView.trailingAnchor.constraint(equalTo: self.fyuseViewController.view.trailingAnchor, constant: -16).isActive = true
+                        fyuseView.bottomAnchor.constraint(equalTo: self.fyuseViewController.view.bottomAnchor, constant: 16).isActive = true
+                        self.viewController.present(self.fyuseViewController, animated: true, completion: nil)
+                        pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "Fyusion360 session retrieved successfully")
+                    } else {
+                        pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Unable to retrieve Fyusion360 session. Please contact support")
+                    }
+                    self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
                 }
-                self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
             }
+        }
+    }
+    
+    @objc(getFyuseThumbnail:)
+    func getFyuseThumbnail(command: CDVInvokedUrlCommand) {
+        if let arguments = command.arguments, arguments.count > 0 {
+            self.commandDelegate.run {
+                FYSessionManager.requestMainFyuseForSession(withIdentifier: (arguments[0] as! String)) { fyuseObj in
+                    
+                    fyuseObj?.thumbnail(success: { thumbnailImage in
+                        
+                        if let thumbnailImage = thumbnailImage {
+                            let thumbnailImageBase64 = UIImagePNGRepresentation(thumbnailImage)?.base64EncodedString(options: .lineLength64Characters)
+                            if thumbnailImageBase64 != "" {
+                                let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: thumbnailImageBase64)
+                                self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+                            } else {
+                                let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Error parsing thumbnail image to base64 string")
+                                self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+                            }
+                        } else {
+                            let pluginResult = CDVPluginResult(status: CDVCommandStatus_OK, messageAs: "No thumbnail")
+                            self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+                        }
+                    }, failure: { error in
+                        let errorResult = error!
+                        let pluginResult = CDVPluginResult(status: CDVCommandStatus_ERROR, messageAs: "Error retrieving thumbnail: \(errorResult)")
+                        self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+                    })
+                }
+            }
+        } else {
+            
         }
     }
     

@@ -12,3 +12,7 @@ exports.startCaptureSession = function (successCallback, errorCallback) {
 exports.showFyuse = function (successCallback, errorCallback, fyuseID) {
     cordova.exec(successCallback, errorCallback, "Fyusion360", "showFyuse", [fyuseID]);
 }
+
+exports.getFyuseThumbnail = function(successCallback, errorCallback, fyuseID) {
+    cordova.exec(successCallback, errorCallback, "Fyusion360", "getFyuseThumbnail", [fyuseID]);
+}
