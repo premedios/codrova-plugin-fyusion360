@@ -6,9 +6,9 @@ const fetch  = require('node-fetch');
 
 module.exports = function(ctx) {
     return new Promise(function(resolve, reject) {
-        var config = {
-            responseType: 'stream'
-        };
+        // var config = {
+        //     responseType: 'stream'
+        // };
         
         let url = "https://developers.fyusion.com/ios/JVORXiVbgaosXiGkwjs_ZtMdTMEDhyQbPjWTcbzP/3.3.0/FyuseSessionTagging.framework.zip";
 
@@ -18,47 +18,49 @@ module.exports = function(ctx) {
         
         const fileStream = fs.createWriteStream(zipPath);
 
-        const downloadFile = (async (url, path) => {
-            const res = await fetch(url);
-            const fileStream = fs.createWriteStream(path);
-            await new Promise((resolve, reject) => {
-                res.body.pipe(fileStream);
-                res.body.on("error", (err) => {
-                    return reject(err);
-                });
-                res.body.on('close', (data) => {
-                    return resolve();
-                });
+        // const downloadFile = (async (url, path) => {
+        //     const res = await fetch(url);
+        //     const fileStream = fs.createWriteStream(path);
+        //     await new Promise((resolve, reject) => {
+        //         res.body.pipe(fileStream);
+        //         res.body.on("error", (err) => {
+        //             return reject(err);
+        //         });
+        //         res.body.on('close', (data) => {
+        //             return resolve();
+        //         });
 
-                fileStream.on("finish", function() {
-                    var zip = new AdmZip(zipPath);
-                    var entries = zip.getEntries();
-                    var entryToExtract;
-                    var found = false
-                    entries.forEach(entry => {
-                        if (entry.entryName.includes("framework") && !found) {
-                            entryToExtract = entry;
-                            found = true
-                        }
-                    });
+        //         fileStream.on("finish", function() {
+        //             var zip = new AdmZip(zipPath);
+        //             var entries = zip.getEntries();
+        //             var entryToExtract;
+        //             var found = false
+        //             entries.forEach(entry => {
+        //                 if (entry.entryName.includes("framework") && !found) {
+        //                     entryToExtract = entry;
+        //                     found = true
+        //                 }
+        //             });
                     
-                    if (found) {
-                        process.stdout.write('Extracting zip file contents....');
-                        zip.extractEntryTo(entryToExtract, extractDestinationPath);
-                        process.stdout.write('Done.\n');
-                        process.stdout.write("Removing zip file....");
-                        fs.unlink(zipPath, (err) => {
-                            process.stdout.write("Done.\n")
-                            return resolve();
-                        });
-                    } else {
-                        return reject('No framework found in zip file');
-                    }
-                    resolve();
-                });
-            });
-        });
+        //             if (found) {
+        //                 process.stdout.write('Extracting zip file contents....');
+        //                 //zip.extractEntryTo(entryToExtract, extractDestinationPath);
+        //                 zip.extractAllTo(extractDestinationPath, true);
+        //                 process.stdout.write('Done.\n');
+        //                 process.stdout.write("Removing zip file....");
+        //                 fs.unlink(zipPath, (err) => {
+        //                     process.stdout.write("Done.\n")
+        //                     return resolve();
+        //                 });
+        //             } else {
+        //                 return reject('No framework found in zip file');
+        //             }
+        //             resolve();
+        //         });
+        //     });
+        // });
 
+        process.stdout.write("Downloading Fyusion360 SDK zip file...");
         fetch(url).then((res) => {
             res.body.pipe(fileStream);
             res.body.on("error", (err) => {
@@ -70,29 +72,41 @@ module.exports = function(ctx) {
 
             fileStream.on("finish", function() {
                 var zip = new AdmZip(zipPath);
-                var entries = zip.getEntries();
-                var entryToExtract;
-                var found = false
-                entries.forEach(entry => {
-                    if (entry.entryName.includes("framework") && !found) {
-                        entryToExtract = entry;
-                        found = true
-                    }
+                // var entries = zip.getEntries();
+                // var entryToExtract;
+                // var found = false
+
+                process.stdout.write("Done\n");
+                process.stdout.write('Extracting zip file contents....');
+                zip.extractAllTo(extractDestinationPath, true);
+                process.stdout.write('Done.\n');
+                process.stdout.write("Removing zip file....");
+                fs.unlink(zipPath, (err) => {
+                    process.stdout.write("Done.\n")
+                    return resolve();
                 });
+
+                // entries.forEach(entry => {
+                //     if (entry.entryName.includes("framework") && !found) {
+                //         entryToExtract = entry;
+                //         found = true
+                //     }
+                // });
                 
-                if (found) {
-                    process.stdout.write('Extracting zip file contents....');
-                    zip.extractEntryTo(entryToExtract, extractDestinationPath);
-                    process.stdout.write('Done.\n');
-                    process.stdout.write("Removing zip file....");
-                    fs.unlink(zipPath, (err) => {
-                        process.stdout.write("Done.\n")
-                        return resolve();
-                    });
-                } else {
-                    return reject('No framework found in zip file');
-                }
-                resolve();
+                // if (found) {
+                //     process.stdout.write('Extracting zip file contents....');
+                //     //zip.extractEntryTo(entryToExtract, extractDestinationPath);
+                //     zip.extractAllTo(extractDestinationPath, true);
+                //     process.stdout.write('Done.\n');
+                //     process.stdout.write("Removing zip file....");
+                //     fs.unlink(zipPath, (err) => {
+                //         process.stdout.write("Done.\n")
+                //         return resolve();
+                //     });
+                // } else {
+                //     return reject('No framework found in zip file');
+                // }
+                return resolve();
             });
         });
 
