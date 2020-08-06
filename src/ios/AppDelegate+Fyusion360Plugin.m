@@ -41,7 +41,7 @@
 - (BOOL)fyusion360Plugin_application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     NSString *apiKey = [self getValueFromPList:@"FYUSION360_API_KEY"];
-    NSString *apiSecret = [self getValueFromPList:@"FYUSION360_APISECRET"];
+    NSString *apiSecret = [self getValueFromPList:@"FYUSION360_API_SECRET"];
     
     [FYAuthManager initializeWithAppID:apiKey appSecret:apiSecret onSuccess:^{
         NSLog(@"Fyuse360 initialized successfully");
