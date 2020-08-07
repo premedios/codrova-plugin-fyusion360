@@ -16,7 +16,7 @@
     <platform name="ios">
         <preference name="CAMERA_USAGE_DESCRIPTION"/>
 
-        <hook type="before_plugin_install" src="hooks/download_fyusion360_library_ios.js"/>
+        <!-- <hook type="before_plugin_install" src="hooks/download_fyusion360_library_ios.js"/> -->
         
         <config-file target="config.xml" parent="/*">
             <feature name="Fyusion360">
