@@ -16,3 +16,7 @@ exports.showFyuse = function (successCallback, errorCallback, fyuseID) {
 exports.getFyuseThumbnail = function(successCallback, errorCallback, fyuseID) {
     cordova.exec(successCallback, errorCallback, "Fyusion360", "getFyuseThumbnail", [fyuseID]);
 }
+
+exports.getDetailPhotos = function(successCallback, errorCallback, sessionID, resolution) {
+    cordova.exec(successCallback, errorCallback, "Fyusion360", "getDetailPhotos", [sessionID, resolution]);
+}
