@@ -5,8 +5,8 @@
 function Fyusion360() {
 }
 
-exports.startCaptureSession = function (successCallback, errorCallback) {
-    cordova.exec(successCallback, errorCallback, "Fyusion360", "startSession");
+exports.startCaptureSession = function (successCallback, errorCallback, options) {
+    cordova.exec(successCallback, errorCallback, "Fyusion360", "startSession", [options]);
 };
 
 exports.showFyuse = function (successCallback, errorCallback, fyuseID) {
