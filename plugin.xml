@@ -38,7 +38,7 @@
         <header-file src="src/ios/AppDelegate+Fyusion360Plugin.h"/>
         <source-file src="src/ios/AppDelegate+Fyusion360Plugin.m"/>
 
-        <framework src="src/ios/3.3.0/FyuseSessionTagging.framework" custom="true" embed="true"/>
+        <framework src="src/ios/3.4.1/FyuseSessionTagging.framework" custom="true" embed="true"/>
 
         <dependency id="cordova-plugin-add-swift-support" url="https://github.com/premedios/cordova-plugin-add-swift-support" /> -->
         

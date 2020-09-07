@@ -11,7 +11,7 @@ module.exports = function(ctx) {
         //     responseType: 'stream'
         // };
         
-        let url = "https://developers.fyusion.com/ios/nVuynERBAhOCMxjKtarLPAJZvBlwoRGGmswZopVi/3.3.0/FyuseSessionTagging.framework.zip";
+        let url = "https://developers.fyusion.com/ios/nVuynERBAhOCMxjKtarLPAJZvBlwoRGGmswZopVi/3.4.1/FyuseSessionTagging.framework.zip";
 
         var zipPath = `${ctx.opts.plugin.dir}/src/ios/Fyusion360.zip`;
         console.log(zipPath);
