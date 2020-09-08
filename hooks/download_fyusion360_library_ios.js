@@ -44,6 +44,7 @@ module.exports = function(ctx) {
                 });
                 process.stdout.write('Removing x86_64 from FyuseSessionTagging...');
                 const output = execSync('ls ' + extractDestinationPath );
+                console.log(output);
                 return resolve();
             });
         });       
