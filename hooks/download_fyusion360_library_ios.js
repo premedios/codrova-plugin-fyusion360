@@ -44,7 +44,7 @@ module.exports = function(ctx) {
                 });
                 process.stdout.write('Removing x86_64 from FyuseSessionTagging...\n');
                 const frameworkPath = extractDestinationPath + '/3.4.1/FyuseSessionTagging.framework/FyuseSessionTagging';
-                const output = execSync('lipo remove x86_64 ' + frameworkPath + ' -o ' + frameworkPath, { encoding: 'utf-8' } );
+                const output = execSync('lipo -remove x86_64 ' + frameworkPath + ' -o ' + frameworkPath, { encoding: 'utf-8' } );
                 console.log(output);
                 return resolve();
             });
