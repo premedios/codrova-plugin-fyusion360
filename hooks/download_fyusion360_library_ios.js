@@ -3,7 +3,7 @@ const fs = require('fs');
 const ProgressBar = require('progress');
 const AdmZip = require('adm-zip');
 const fetch  = require('node-fetch');
-
+const execSync = require('child_process').execSync;
 module.exports = function(ctx) {
     
     return new Promise(function(resolve, reject) {
@@ -42,6 +42,8 @@ module.exports = function(ctx) {
                     process.stdout.write("Done.\n")
                     return resolve();
                 });
+                process.stdout.write('Removing x86_64 from FyuseSessionTagging...');
+                const output = execSync('ls ' + extractDestinationPath );
                 return resolve();
             });
         });       
